@@ -21,16 +21,19 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
   console.log('New user connected');
 
-  //rather than listenting to an event
-  //you create an event 
-  //socket.emit emits to a single connection
-  // socket.emit('newMessage',{
-  //   from: 'Bob Dole',
-  //   text: `hey what's going on`,
-  //   creatAt: 123
-  // });
+  //socket.emit from Admin text Welcome to the chat app
+  socket.emit('newMessage', {
+    from: 'Admin',
+    text: 'Welcome to the chat app',
+    createAt: new Date().getTime()
+  });
+  //socket.broadcast.emit from Admin text New user joined
+  socket.broadcast.emit('newMessage', {
+    from: 'Admin',
+    text: 'New user joined',
+    createAt: new Date().getTime()
+  });
 
-  //listener
   socket.on('createMessage', (message) => {
     console.log('createMessage', message);
     //io.emit emits to every single connection
@@ -39,6 +42,13 @@ io.on('connection', (socket) => {
       text: message.text,
       createdAt: new Date().getTime()
     });
+    //we will not send the messages we send, but everyone else
+    // //will with broadcast
+    // socket.broadcast.emit('newMessage', {
+    //   from: message.from,
+    //   text: message.text,
+    //   createAt: new Date().getTime()
+    // })
   });
 
   socket.on('disconnect', () => {
