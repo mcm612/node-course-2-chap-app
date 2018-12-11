@@ -23,15 +23,22 @@ io.on('connection', (socket) => {
 
   //rather than listenting to an event
   //you create an event 
-  socket.emit('newMessage',{
-    from: 'Bob Dole',
-    text: `hey what's going on`,
-    creatAt: 123
-  });
+  //socket.emit emits to a single connection
+  // socket.emit('newMessage',{
+  //   from: 'Bob Dole',
+  //   text: `hey what's going on`,
+  //   creatAt: 123
+  // });
 
   //listener
   socket.on('createMessage', (message) => {
     console.log('createMessage', message);
+    //io.emit emits to every single connection
+    io.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    });
   });
 
   socket.on('disconnect', () => {
