@@ -27,10 +27,11 @@ io.on('connection', (socket) => {
   //socket.broadcast.emit from Admin text New user joined
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
-  socket.on('createMessage', (message) => {
+  socket.on('createMessage', (message, callback) => {
     console.log('createMessage', message);
     //io.emit emits to every single connection
     io.emit('newMessage', generateMessage(message.from, message.text));
+    callback('This is from the server');
     //we will not send the messages we send, but everyone else
     // //will with broadcast
     // socket.broadcast.emit('newMessage', {
